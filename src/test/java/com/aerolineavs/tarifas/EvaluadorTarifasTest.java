@@ -2,7 +2,10 @@ package com.aerolineavs.tarifas;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EvaluadorTarifasTest {
 
@@ -137,5 +140,42 @@ public class EvaluadorTarifasTest {
         );
 
         assertEquals(Tarifa.CONOCE_EL_MUNDO_CON_TUS_PEQUES, EvaluadorTarifas.evaluar(cliente).tarifa());
+    }
+
+    @Test
+    void debeIndicarLasSuposicionesAplicadasAlResultado() {
+        ClientePotencial cliente = new ClientePotencial(
+                23, 3, TipoViajero.TRABAJADOR_JOVEN, ClaseVuelo.TURISTA,
+                RegionDestino.OTRA, 18000, false, false
+        );
+
+        String suposiciones = EvaluadorTarifas.evaluar(cliente).suposiciones();
+
+        assertAll(
+                () -> assertTrue(suposiciones.contains("9 desplazamientos/año")),
+                () -> assertTrue(suposiciones.contains("viajes de ocio")),
+                () -> assertTrue(suposiciones.contains("por billete"))
+        );
+    }
+
+    @Test
+    void debeRechazarDatosNumericosNegativos() {
+        assertThrows(IllegalArgumentException.class, () -> new ClientePotencial(
+                -1, 0, TipoViajero.GENERAL, ClaseVuelo.TURISTA, RegionDestino.OTRA, 0, false, false
+        ));
+        assertThrows(IllegalArgumentException.class, () -> new ClientePotencial(
+                20, -1, TipoViajero.GENERAL, ClaseVuelo.TURISTA, RegionDestino.OTRA, 0, false, false
+        ));
+        assertThrows(IllegalArgumentException.class, () -> new ClientePotencial(
+                20, 0, TipoViajero.GENERAL, ClaseVuelo.TURISTA, RegionDestino.OTRA, -1, false, false
+        ));
+    }
+
+    @Test
+    void debeRechazarIngresosNoFinitos() {
+        assertThrows(IllegalArgumentException.class, () -> new ClientePotencial(
+                20, 0, TipoViajero.GENERAL, ClaseVuelo.TURISTA,
+                RegionDestino.OTRA, Double.NaN, false, false
+        ));
     }
 }

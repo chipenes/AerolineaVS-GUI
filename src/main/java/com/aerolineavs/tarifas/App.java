@@ -38,10 +38,10 @@ public final class App {
             double ingresos = Double.parseDouble(scanner.nextLine().trim());
 
             System.out.print("¿Viaja con niños menores de 12? (s/n): ");
-            boolean conNinos = scanner.nextLine().trim().equalsIgnoreCase("s");
+            boolean conNinos = leerRespuestaSiNo(scanner, "¿Viaja con niños menores de 12?");
 
             System.out.print("¿Vive con sus padres? (s/n): ");
-            boolean viveConPadres = scanner.nextLine().trim().equalsIgnoreCase("s");
+            boolean viveConPadres = leerRespuestaSiNo(scanner, "¿Vive con sus padres?");
 
             ClientePotencial cliente = new ClientePotencial(
                     edad, vuelos, tipo, clase, destino, ingresos, conNinos, viveConPadres
@@ -64,5 +64,16 @@ public final class App {
             System.err.println("Detalle: " + ex.getMessage());
             System.exit(1);
         }
+    }
+
+    private static boolean leerRespuestaSiNo(Scanner scanner, String pregunta) {
+        String respuesta = scanner.nextLine().trim();
+        if (respuesta.equalsIgnoreCase("s")) {
+            return true;
+        }
+        if (respuesta.equalsIgnoreCase("n")) {
+            return false;
+        }
+        throw new IllegalArgumentException(pregunta + ": responda 's' o 'n'.");
     }
 }

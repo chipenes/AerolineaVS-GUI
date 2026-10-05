@@ -1,5 +1,7 @@
 package com.aerolineavs.tarifas;
 
+import java.util.Objects;
+
 /**
  * Datos de entrada de cliente para evaluar la tarifa.
  *
@@ -22,4 +24,19 @@ public record ClientePotencial(
         boolean viajaConNinos,
         boolean viveConPadres
 ) {
+
+    public ClientePotencial {
+        if (edad < 0) {
+            throw new IllegalArgumentException("La edad no puede ser negativa.");
+        }
+        if (vuelosAnuales < 0) {
+            throw new IllegalArgumentException("Los vuelos anuales no pueden ser negativos.");
+        }
+        if (!Double.isFinite(ingresosAnuales) || ingresosAnuales < 0) {
+            throw new IllegalArgumentException("Los ingresos deben ser un importe finito no negativo.");
+        }
+        Objects.requireNonNull(tipoViajero, "El tipo de viajero es obligatorio.");
+        Objects.requireNonNull(clasePreferida, "La clase preferida es obligatoria.");
+        Objects.requireNonNull(destinoPreferido, "El destino preferido es obligatorio.");
+    }
 }
