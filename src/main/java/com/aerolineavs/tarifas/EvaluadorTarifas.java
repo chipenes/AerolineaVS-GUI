@@ -6,8 +6,10 @@ package com.aerolineavs.tarifas;
 public final class EvaluadorTarifas {
 
     private static final String SUPOSICIONES = "Suposiciones: curso universitario = 9 desplazamientos/año; "
-            + "la frecuencia anual informada representa los viajes relevantes de cada regla; "
-            + "si no se cumple ninguna condición exacta, no se oferta tarifa.";
+            + "la frecuencia anual representa los viajes relevantes de cada regla (incluidos los viajes de ocio "
+            + "para jóvenes profesionales); los requisitos de clase turista y tres viajes se aplican a ambas "
+            + "tarifas de jóvenes profesionales; la tarifa con peques sustituye a la tarifa base y su descuento "
+            + "del 10% es por billete; si no se cumple ninguna condición exacta, no se oferta tarifa.";
 
     private EvaluadorTarifas() {
     }
