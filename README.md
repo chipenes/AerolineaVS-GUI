@@ -28,6 +28,28 @@ mvn javadoc:javadoc
 mvn exec:java -Dexec.mainClass=com.aerolineavs.tarifas.App
 ```
 
+## Ejecutar la interfaz gráfica Swing
+```bash
+mvn exec:java -Dexec.mainClass=com.aerolineavs.presentation.gui.SwingApp
+```
+
+La interfaz recoge edad, frecuencia de viajes, tipo de viajero, clase, destino,
+ingresos y las opciones de viajar con niños o vivir con los padres. La vista
+depende de `IPricingService`; `PricingServiceImpl` adapta las reglas existentes
+sin incorporar dependencias de Swing ni de consola al servicio.
+
+## Separación de responsabilidades
+- `EvaluadorTarifas` mantiene las reglas de negocio sin conocer la CLI ni la GUI.
+- `IPricingService` define el contrato de aplicación y `PricingServiceImpl` conecta
+  ese contrato con el evaluador existente.
+- `SwingApp` compone el servicio y la ventana; `TarifaFrame` se ocupa de entrada,
+  presentación y validación superficial de la interfaz.
+- Antes de extraer el contrato, la GUI habría tenido que depender directamente del
+  evaluador estático concreto. Esto acoplaba presentación y lógica de aplicación
+  (DIP) y dificultaba sustituir la implementación o probar consumidores de forma
+  aislada. La interfaz invierte esa dependencia; las reglas continúan separadas de
+  la consola y la GUI (SRP).
+
 ## Suposiciones para evitar ambigüedades
 - En la tarifa de estudiante, "al menos una vez al mes durante el curso" se interpreta como **9 viajes/año** (nueve meses lectivos).
 - La frecuencia anual informada cuenta los viajes que cualifican para la regla evaluada: en jóvenes profesionales, son viajes de ocio; en estudiantes, desplazamientos entre la residencia familiar y la universidad durante el curso.
